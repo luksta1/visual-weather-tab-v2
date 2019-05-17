@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, Icon, Input } from 'semantic-ui-react';
 import {
-  getForecast, getLocation, getTemp, getNews,
+  getForecast, getLocation, updateLocation, getTemp, getNews,
 } from '../store';
 import TodaysForecast from './TodaysForecast';
 import FiveDayForecast from './FiveDayForecast';
@@ -17,7 +17,6 @@ class App extends Component {
       error: '',
       term: '',
       background: null,
-      currentCity: '',
     };
   }
 
@@ -25,7 +24,6 @@ class App extends Component {
     this.getLocation();
     this.getNews();
   }
-
 
   getNews = () => {
     const { loadNews } = this.props;
@@ -47,30 +45,23 @@ class App extends Component {
 
   updateLocation = (evt) => {
     evt.preventDefault();
-    const self = this;
     const { value } = evt.target.location;
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address: value }, (results, status) => {
-      if (status === window.google.maps.GeocoderStatus.OK) {
-        const position = {
-          coords: {
-            latitude: results[0].geometry.location.lat(),
-            longitude: results[0].geometry.location.lng(),
-          },
-        };
-        self.handleGeolocationSuccess(position);
-        this.setState({ currentCity: value });
-      } else {
-        alert(`Something got wrong ${status}`);
-      }
-    });
+    const { newLocation } = this.props;
+
+    newLocation(value);
+
     const form = document.getElementById('search-form');
     form.reset();
   }
 
+
   // Callback to handle success
   handleGeolocationSuccess = (position) => {
     const { coords } = position;
+    this.getForecastAndTemp(coords);
+  }
+
+  getForecastAndTemp = (coords) => {
     const { loadForecast, loadTemp } = this.props;
     loadForecast(coords);
     loadTemp(coords);
@@ -92,13 +83,11 @@ class App extends Component {
   renderTodaysWeather = () => {
     let component;
     const { forecast, location } = this.props;
-    const { currentCity } = this.state;
-    if (forecast.currently && location) {
+    if (forecast.currently && location.city) {
       const currentWeather = forecast.currently;
-      const cityToPass = currentCity === '' ? location : currentCity;
       const { icons } = this.props;
       component = (
-        <TodaysForecast weather={currentWeather} icons={icons} city={cityToPass} />
+        <TodaysForecast weather={currentWeather} icons={icons} city={location.city} />
       );
     }
     return component;
@@ -108,15 +97,13 @@ class App extends Component {
   render5DayForecast = () => {
     let component;
     const { forecast, location } = this.props;
-    const { currentCity } = this.state;
-    if (forecast.currently && location) {
+    if (forecast.currently && location.city) {
       const days = forecast.daily.data.slice(0, 5);
       const { icons } = this.props;
-      const cityToPass = currentCity === '' ? location : currentCity;
       component = (
         <div className="fiveday-wrapper">
           {days.map(weather => (
-            <FiveDayForecast key={weather.time} weather={weather} icons={icons} city={cityToPass} />
+            <FiveDayForecast key={weather.time} weather={weather} icons={icons} city={location.city} />
           ))}
         </div>
       );
@@ -135,7 +122,7 @@ class App extends Component {
           <h3>{error}</h3>
         </div>
       );
-    } if (forecast.length === 0 || !location) {
+    } if (forecast.length === 0 || !location.city) {
       return (
         <div className="loading">
           <img alt="loader" src="/style/img/umbrella.png" />
@@ -147,7 +134,7 @@ class App extends Component {
     // this.checkTemp();
     // }
     return (
-      location && temp && news && (
+      location.city && temp && news && (
       <div className={`forecast ${temp || '#eee'}`}>
         <div className="top">
           <div className="time">
@@ -215,6 +202,9 @@ const mapDispatch = dispatch => (
     loadLocation() {
       dispatch(getLocation());
     },
+    newLocation(city) {
+      dispatch(updateLocation(city));
+    },
     loadTemp(coords) {
       dispatch(getTemp(coords));
     },
@@ -226,7 +216,7 @@ const mapDispatch = dispatch => (
 
 App.propTypes = {
   forecast: PropTypes.any.isRequired,
-  location: PropTypes.string.isRequired,
+  location: PropTypes.object.isRequired,
   temp: PropTypes.string.isRequired,
   news: PropTypes.object.isRequired,
   icons: PropTypes.object.isRequired,
@@ -234,6 +224,7 @@ App.propTypes = {
   loadTemp: PropTypes.func.isRequired,
   loadNews: PropTypes.func.isRequired,
   loadLocation: PropTypes.func.isRequired,
+  newLocation: PropTypes.func.isRequired,
 };
 
 export default connect(mapState, mapDispatch)(App);
