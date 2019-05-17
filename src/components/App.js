@@ -17,6 +17,7 @@ class App extends Component {
       error: '',
       term: '',
       background: null,
+      currentCity: '',
     };
   }
 
@@ -27,10 +28,13 @@ class App extends Component {
 
 
   getNews = () => {
-    getNews();
+    const { loadNews } = this.props;
+    loadNews();
   }
 
   getLocation = () => {
+    const { loadLocation } = this.props;
+    loadLocation();
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this.handleGeolocationSuccess,
@@ -38,15 +42,16 @@ class App extends Component {
         { enableHighAccuracy: true, timeout: 30000, maximumAge: 30000 },
       );
     }
+    console.log('loc2', this.props.location);
   }
 
   updateLocation = (evt) => {
     evt.preventDefault();
     const self = this;
     const { value } = evt.target.location;
-    const geocoder = new google.maps.Geocoder();
+    const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ address: value }, (results, status) => {
-      if (status === google.maps.GeocoderStatus.OK) {
+      if (status === window.google.maps.GeocoderStatus.OK) {
         const position = {
           coords: {
             latitude: results[0].geometry.location.lat(),
@@ -54,6 +59,7 @@ class App extends Component {
           },
         };
         self.handleGeolocationSuccess(position);
+        this.setState({ currentCity: value });
       } else {
         alert(`Something got wrong ${status}`);
       }
@@ -65,9 +71,9 @@ class App extends Component {
   // Callback to handle success
   handleGeolocationSuccess = (position) => {
     const { coords } = position;
-    getLocation(coords);
-    getForecast(coords);
-    getTemp(coords);
+    const { loadForecast, loadTemp } = this.props;
+    loadForecast(coords);
+    loadTemp(coords);
   }
 
   // Callback to handle error
@@ -86,12 +92,13 @@ class App extends Component {
   renderTodaysWeather = () => {
     let component;
     const { forecast, location } = this.props;
+    const { currentCity } = this.state;
     if (forecast.currently && location) {
       const currentWeather = forecast.currently;
+      const cityToPass = currentCity === '' ? location : currentCity;
       const { icons } = this.props;
-      const { city } = location;
       component = (
-        <TodaysForecast weather={currentWeather} icons={icons} city={city} />
+        <TodaysForecast weather={currentWeather} icons={icons} city={cityToPass} />
       );
     }
     return component;
@@ -101,14 +108,15 @@ class App extends Component {
   render5DayForecast = () => {
     let component;
     const { forecast, location } = this.props;
+    const { currentCity } = this.state;
     if (forecast.currently && location) {
       const days = forecast.daily.data.slice(0, 5);
       const { icons } = this.props;
-      const { city } = location;
+      const cityToPass = currentCity === '' ? location : currentCity;
       component = (
         <div className="fiveday-wrapper">
           {days.map(weather => (
-            <FiveDayForecast key={weather.time} weather={weather} icons={icons} city={city} />
+            <FiveDayForecast key={weather.time} weather={weather} icons={icons} city={cityToPass} />
           ))}
         </div>
       );
@@ -134,11 +142,12 @@ class App extends Component {
         </div>
       );
     }
-    console.log(this.props);
+    console.log('PROPS', this.props);
     // if (!this.state.background) {
     // this.checkTemp();
     // }
     return (
+      location && temp && news && (
       <div className={`forecast ${temp || '#eee'}`}>
         <div className="top">
           <div className="time">
@@ -167,13 +176,15 @@ class App extends Component {
           <Articles articles={news.articles} />
         </div>
       </div>
+      )
 
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {
+
+const mapState = state => (
+  {
     forecast: state.forecast,
     location: state.location,
     icons: {
@@ -193,20 +204,36 @@ function mapStateToProps(state) {
     },
     temp: state.temp,
     news: state.news,
-  };
-}
+  }
+);
+
+const mapDispatch = dispatch => (
+  {
+    loadForecast(coords) {
+      dispatch(getForecast(coords));
+    },
+    loadLocation() {
+      dispatch(getLocation());
+    },
+    loadTemp(coords) {
+      dispatch(getTemp(coords));
+    },
+    loadNews() {
+      dispatch(getNews());
+    },
+  }
+);
 
 App.propTypes = {
-  forecast: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
+  forecast: PropTypes.any.isRequired,
+  location: PropTypes.string.isRequired,
   temp: PropTypes.string.isRequired,
   news: PropTypes.object.isRequired,
-  icons: PropTypes.string.isRequired,
+  icons: PropTypes.object.isRequired,
+  loadForecast: PropTypes.func.isRequired,
+  loadTemp: PropTypes.func.isRequired,
+  loadNews: PropTypes.func.isRequired,
+  loadLocation: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, {
-  getForecast,
-  getLocation,
-  getTemp,
-  getNews,
-})(App);
+export default connect(mapState, mapDispatch)(App);

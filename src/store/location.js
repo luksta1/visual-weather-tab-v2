@@ -21,8 +21,7 @@ export default function (state = INITIAL_STATE, action) {
 }
 
 // location thunks
-export const getLocation = coords => (dispatch) => {
-  const { latitude, longitude } = coords;
-  axios.get(`api/location?latitude=${latitude}&longitude=${longitude}`)
-    .then(res => dispatch(fetchLocation(res.data)));
+export const getLocation = () => (dispatch) => {
+  axios.get('http://ip-api.com/json/')
+    .then(res => dispatch(fetchLocation(res.data.city)));
 };

@@ -18,8 +18,8 @@ const Articles = (props) => {
   const { articles } = props;
   return (
     <div onLoad={slider()} className="article-wrapper">
-      {articles.map(article => (
-        <div key={article.publushedAt} className="article">
+      {articles && articles.map(article => (
+        <div key={article.publishedAt} className="article">
           <a href={article.url}><h4>{article.title}</h4></a>
           <h6>{article.source.name}</h6>
         </div>
@@ -29,7 +29,11 @@ const Articles = (props) => {
 };
 
 Articles.propTypes = {
-  articles: PropTypes.object.isRequired,
+  articles: PropTypes.array,
+};
+
+Articles.defaultProps = {
+  articles: {},
 };
 
 export default Articles;

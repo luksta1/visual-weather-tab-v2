@@ -26,7 +26,7 @@ export const setTemp = (temp) => {
 // forecast thunks
 export const getTemp = coords => (dispatch) => {
   const { latitude, longitude } = coords;
-  axios.get(`api/forecast?latitude=${latitude}&longitude=${longitude}`)
+  axios.get(`https://api.darksky.net/forecast/32e50fc34cd127c8f19e14267bc0309b/${latitude},${longitude}`)
     .then(res => res.data.currently.temperature)
     .then((temp) => {
       dispatch(setTemp(temp));
@@ -34,7 +34,7 @@ export const getTemp = coords => (dispatch) => {
 };
 
 // Returns the data from the api for the weather forecast.
-export default function (state = 0, action) {
+export default function (state = '', action) {
   switch (action.type) {
     case SET_TEMP:
       return checkTemp(action.temp);

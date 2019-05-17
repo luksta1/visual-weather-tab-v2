@@ -20,7 +20,11 @@ const TodaysForecast = ({ weather, icons, city }) => (
 TodaysForecast.propTypes = {
   weather: PropTypes.object.isRequired,
   icons: PropTypes.object.isRequired,
-  city: PropTypes.string.isRequired,
+  city: PropTypes.string,
+};
+
+TodaysForecast.defaultProps = {
+  city: '',
 };
 
 export default TodaysForecast;
