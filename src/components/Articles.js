@@ -2,28 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const slider = () => {
-  let current = 0;
-  const slides = document.getElementsByClassName('article');
-
-  setInterval(() => {
-    for (let i = 0; i < slides.length; i += 1) {
-      slides[i].style.opacity = 0;
-    }
-    current = (current !== slides.length - 1) ? current + 1 : 0;
+  setTimeout(() => {
+    let current = 1;
+    let previous = 0;
+    const slides = document.getElementsByClassName('article');
+    slides[previous].style.opacity = 0;
     slides[current].style.opacity = 1;
-  }, 10000);
+
+    setInterval(() => {
+      previous = current;
+      current = (current !== slides.length - 1) ? current + 1 : 0;
+      slides[previous].style.opacity = 0;
+      slides[current].style.opacity = 1;
+    }, 5000);
+  }, 100);
 };
 
 const Articles = (props) => {
   const { articles } = props;
+  const opacityStyle = { opacity: 0 };
   return (
-    <div onLoad={slider()} className="article-wrapper">
-      {articles && articles.map(article => (
-        <div key={article.publishedAt} className="article">
-          <a href={article.url}><h4>{article.title}</h4></a>
-          <h6>{article.source.name}</h6>
-        </div>
-      ))}
+    <div className="article-wrapper">
+      {articles && articles.map((article, index) => {
+        if (index === articles.length - 1) { slider(); }
+        return (
+          <div key={Math.random()} style={opacityStyle} className="article">
+            <a href={article.url}><h4>{article.title}</h4></a>
+            <h6>{article.source.name}</h6>
+          </div>
+        );
+      })}
     </div>
   );
 };

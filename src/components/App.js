@@ -15,8 +15,7 @@ class App extends Component {
     super(props);
     this.state = {
       error: '',
-      term: '',
-      background: null,
+      localCoords: {},
     };
   }
 
@@ -40,15 +39,16 @@ class App extends Component {
         { enableHighAccuracy: true, timeout: 30000, maximumAge: 30000 },
       );
     }
-    console.log('loc2', this.props.location);
   }
 
   updateLocation = (evt) => {
     evt.preventDefault();
     const { value } = evt.target.location;
     const { newLocation } = this.props;
+    const { localCoords } = this.state;
+    const upperCasedCity = value.charAt(0).toUpperCase() + value.slice(1);
 
-    newLocation(value);
+    newLocation(upperCasedCity, localCoords);
 
     const form = document.getElementById('search-form');
     form.reset();
@@ -58,6 +58,7 @@ class App extends Component {
   // Callback to handle success
   handleGeolocationSuccess = (position) => {
     const { coords } = position;
+    this.setState({ localCoords: coords });
     this.getForecastAndTemp(coords);
   }
 
@@ -129,10 +130,7 @@ class App extends Component {
         </div>
       );
     }
-    console.log('PROPS', this.props);
-    // if (!this.state.background) {
-    // this.checkTemp();
-    // }
+
     return (
       location.city && temp && news && (
       <div className={`forecast ${temp || '#eee'}`}>
@@ -202,8 +200,8 @@ const mapDispatch = dispatch => (
     loadLocation() {
       dispatch(getLocation());
     },
-    newLocation(city) {
-      dispatch(updateLocation(city));
+    newLocation(city, localCoords) {
+      dispatch(updateLocation(city, localCoords));
     },
     loadTemp(coords) {
       dispatch(getTemp(coords));

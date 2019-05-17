@@ -52,17 +52,21 @@ export const getLocation = () => (dispatch) => {
     .then(res => dispatch(fetchLocation(res.data.city)));
 };
 
-export const updateLocation = city => (dispatch) => {
+export const updateLocation = (city, localCoords) => (dispatch) => {
   axios.get(`https://geocoder.cit.api.here.com/6.2/geocode.json?searchtext=${city}&app_id=ctZsvJnnjyOHswEDqRvy&app_code=d6nPLT_HCw4a7MIccx0BkQ`)
     .then((res) => {
-      console.log('RES', res.data);
-      const coords = {
-        latitude: res.data.Response.View[0].Result[0].Location.DisplayPosition.Latitude,
-        longitude: res.data.Response.View[0].Result[0].Location.DisplayPosition.Longitude,
-      };
-      console.log('COORDS', coords);
-      dispatch(updateCity(city, coords));
-      dispatch(getForecast(coords));
-      dispatch(getTemp(coords));
+      if (!res.data.Response.View.length) {
+        dispatch(getLocation());
+        dispatch(getForecast(localCoords));
+        dispatch(getTemp(localCoords));
+      } else {
+        const coords = {
+          latitude: res.data.Response.View[0].Result[0].Location.DisplayPosition.Latitude,
+          longitude: res.data.Response.View[0].Result[0].Location.DisplayPosition.Longitude,
+        };
+        dispatch(updateCity(city, coords));
+        dispatch(getForecast(coords));
+        dispatch(getTemp(coords));
+      }
     });
 };

@@ -172,6 +172,8 @@ div.bottom {
     opacity: 0.5;
     transition: opacity 0.5s;
     display: flex;
+    width: 100%;
+    justify-content: center;
 }
 
 div.bottom:hover {
@@ -258,6 +260,7 @@ div.loading {
 .article {
     position: absolute;
     transition: opacity .5s ease-in;
+    justify-content: center;
 }
 
 .article+.article {
@@ -266,8 +269,11 @@ div.loading {
 
 .article-wrapper {
     position: relative;
-    width: 55vh;
-    margin: 0 auto;
+    width: 30vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 300px;
 }
 
 div.forecast-list-item:hover {
