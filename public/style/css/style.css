@@ -1,0 +1,400 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+html,
+body {
+    margin: 0px;
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+}
+
+.container {
+    background: #eee;
+    height: 100%;
+}
+
+div.forecast {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+div.cold {
+    background: linear-gradient(-45deg, #e9f1fd, #c3cfe2, #e4efe9, #93a5cf);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 15s ease infinite;
+    -moz-animation: Gradient 15s ease infinite;
+    animation: Gradient 15s ease infinite;
+}
+
+div.cool {
+    background: linear-gradient(-45deg, #7de2fc, #b9b6e5, #64b3f4, #c2e59c);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 15s ease infinite;
+    -moz-animation: Gradient 15s ease infinite;
+    animation: Gradient 15s ease infinite;
+}
+
+div.warm {
+    background: linear-gradient(-45deg, #f794a4, #fdd6bd, #fa709a, #fee140);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 15s ease infinite;
+    -moz-animation: Gradient 15s ease infinite;
+    animation: Gradient 15s ease infinite;
+}
+
+div.hot {
+    background: linear-gradient(-45deg, #ff5858, #f09819, #f77062, #fe5196);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 15s ease infinite;
+    -moz-animation: Gradient 15s ease infinite;
+    animation: Gradient 15s ease infinite;
+}
+
+@-webkit-keyframes Gradient {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@-moz-keyframes Gradient {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@keyframes Gradient {
+    0% {
+        background-position: 0% 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+div.today-wrapper {
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    padding: 2em;
+    border-bottom: 1px solid #fff;
+}
+
+div.today-wrapper .today-temp {
+    align-self: center;
+}
+
+div.today-wrapper .today-temp h1 {
+    font-size: 8em;
+    margin: 0;
+}
+
+div.today-wrapper .today-info {
+    align-self: center;
+    margin-left: 2em;
+    margin-bottom: -1em;
+}
+
+div.today-wrapper .today-info h1 {
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+div.today-wrapper .today-info h4 {
+    margin: .5em 0 0 0;
+    letter-spacing: 1px;
+    font-weight: 100;
+    display: flex;
+}
+
+div.today-wrapper .today-info h4 i {
+    font-size: 2em;
+}
+
+div.today-wrapper .today-info h4 span {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+div.fiveday-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    color: #fff;
+    padding: 3em 2em;
+}
+
+div.todays-forecast {
+    margin-bottom: 4em;
+}
+
+div.fiveday-single {
+    margin: 0 1em;
+}
+
+div.fiveday-single .fiveday-temp h3 {
+    margin: .8em 0 .4em 0;
+}
+
+div.bottom,
+div.top {
+    flex: .3;
+}
+
+div.top {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 2em 2em 1em 2em;
+}
+
+.top .time h3 {
+    color: #fff;
+}
+
+div.bottom {
+    text-align: center;
+    color: #fff;
+    opacity: 0.5;
+    transition: opacity 0.5s;
+    display: flex;
+}
+
+div.bottom:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.bottom h6 {
+    margin: 0.2em
+}
+
+.bottom a {
+    color: #fff;
+}
+
+.bottom a:hover {
+    color: #fff;
+}
+
+div.error {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+div.loading {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    animation: scale 2s infinite;
+    -webkit-animation: scale 2s infinite;
+}
+
+@keyframes scale {
+    0% {
+        -webkit-transform: scale(.38);
+    }
+    50% {
+        -webkit-transform: scale(.5);
+    }
+    100% {
+        -webkit-transform: scale(.38);
+    }
+}
+
+@-webkit-keyframes scale {
+    0% {
+        -webkit-transform: scale(.38);
+    }
+    50% {
+        -webkit-transform: scale(.5);
+    }
+    100% {
+        -webkit-transform: scale(.38);
+    }
+}
+
+#city-search {
+    border-radius: 18px;
+    opacity: 0.4;
+    transition: opacity 0.5s;
+    border: none;
+    background-color: #eee;
+}
+
+#city-search:hover,
+#city-search:focus {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.article {
+    position: absolute;
+    transition: opacity .5s ease-in;
+}
+
+.article+.article {
+    opacity: 0;
+}
+
+.article-wrapper {
+    position: relative;
+    width: 55vh;
+    margin: 0 auto;
+}
+
+div.forecast-list-item:hover {
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+    transition: transform 0.35s ease-in;
+}
+
+.header,
+.footer {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    display: flex;
+    flex: 1;
+    padding: 0.5em 0.5em 0 0.5em;
+}
+
+.header {
+    text-align: center;
+    padding-top: 0.8em;
+}
+
+.footer {
+    text-align: center;
+}
+
+.footer div {
+    width: 100%;
+    margin-bottom: 0;
+    padding-top: 1.5em;
+    color: #5b5b5b;
+}
+
+.header .header-wind,
+.header .header-time {
+    flex: 1;
+    color: #8c8c8c;
+}
+
+.header-wind {
+    text-align: left;
+}
+
+.header-time {
+    text-align: right;
+}
+
+.header .header-time {
+    font-size: 0.98em;
+}
+
+.content {
+    flex: 3;
+    text-align: center;
+}
+
+.content .content-max-temp {
+    font-size: 3em;
+}
+
+.content .content-min-temp {
+    font-size: 1.5em;
+    color: #8c8c8c;
+}
+
+.content h3 {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 0.3em 0 0.3em;
+    font-size: 1.28571429em;
+    text-align: center;
+}
+
+.icon-time {
+    width: 20px;
+    height: 20px;
+}
+
+.icon-img {
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+}
+
+.icon-img.wind-img {
+    margin-right: 5px;
+}
+
+.icon-img.clock-img,
+.icon-img.location-img {
+    margin-right: 5px;
+}
+
+
+/*Response styling*/
+
+@media screen and (max-width: 480px) {
+    body {
+        background: none;
+    }
+    div.container {
+        height: auto;
+    }
+    div.branding-heading,
+    div.branding-footer {
+        padding: 1em;
+    }
+    div.forecast-list {
+        flex-direction: column;
+    }
+    div.forecast-list-item {
+        margin: 1em 1.25em;
+        height: 350px;
+        width: 250px;
+        opacity: 1.0;
+        transition: none !important;
+        transform: none !important;
+    }
+    div.forecast-list:hover div.forecast-list-item {
+        opacity: 1.0
+    }
+    div.forecast-list div.forecast-list-item:hover {
+        opacity: 1.0;
+    }
+}

@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Visual Weather",
+  "name": "Visual Weather Tab v2",
+  "version": "2.0",
   "icons": [
     {
       "src": "favicon.ico",
@@ -11,5 +12,12 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "browser_action": {
+    "default_icon": "./style/img/umbrella.png"
+  },
+  "manifest_version": 2
 }
