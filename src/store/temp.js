@@ -26,7 +26,7 @@ export const setTemp = (temp) => {
 // forecast thunks
 export const getTemp = coords => (dispatch) => {
   const { latitude, longitude } = coords;
-  axios.get(`https://api.darksky.net/forecast/32e50fc34cd127c8f19e14267bc0309b/${latitude},${longitude}`)
+  axios.get(`https://jsonp.afeld.me/?url=https://api.darksky.net/forecast/32e50fc34cd127c8f19e14267bc0309b/${latitude},${longitude}`)
     .then(res => res.data.currently.temperature)
     .then((temp) => {
       dispatch(setTemp(temp));

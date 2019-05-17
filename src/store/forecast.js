@@ -23,7 +23,7 @@ export default function (state = INITIAL_STATE, action) {
 // forecast thunks
 export const getForecast = coords => (dispatch) => {
   const { latitude, longitude } = coords;
-  axios.get(`https://api.darksky.net/forecast/32e50fc34cd127c8f19e14267bc0309b/${latitude},${longitude}`)
+  axios.get(`https://jsonp.afeld.me/?url=https://api.darksky.net/forecast/32e50fc34cd127c8f19e14267bc0309b/${latitude},${longitude}`)
     .then((res) => {
       dispatch(fetchForecast(res.data));
     });

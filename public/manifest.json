@@ -1,7 +1,7 @@
 {
   "short_name": "Visual Weather",
   "name": "Visual Weather Tab v2",
-  "version": "2.0",
+  "version": "1.0.1",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,7 +9,6 @@
       "type": "image/x-icon"
     }
   ],
-  "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff",
@@ -19,5 +18,12 @@
   "browser_action": {
     "default_icon": "./style/img/umbrella.png"
   },
+  "permissions": [
+    "http://*.google.com/",
+    "https://*.google.com/",
+    "geolocation",
+    "http://localhost/*",
+    "https://maps.googleapis.com/*"
+  ],
   "manifest_version": 2
 }
